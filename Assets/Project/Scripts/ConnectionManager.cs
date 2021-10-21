@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class ConnectionManager : MonoBehaviourPunCallbacks
@@ -13,6 +14,17 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.AutomaticallySyncScene = true;
+        SceneManager.sceneLoaded += OnsceneLoaded;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnsceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            playerTransform = PhotonNetwork.Instantiate("Cube", Random.insideUnitCircle, Quaternion.identity).transform;
+        }
     }
 
     private void OnGUI()
@@ -38,7 +50,8 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Join Room");
-        playerTransform = PhotonNetwork.Instantiate("Cube", Random.insideUnitCircle, Quaternion.identity).transform;
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.LoadLevel(1);
     }
 
     private void OnDrawGizmos()
@@ -46,7 +59,7 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
         if (playerTransform)
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawCube(playerTransform.position + Vector3.up , Vector3.one * .1f);
+            Gizmos.DrawCube(playerTransform.position + Vector3.up, Vector3.one * .1f);
         }
     }
 }
