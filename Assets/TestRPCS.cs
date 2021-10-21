@@ -17,13 +17,19 @@ public class TestRPCS : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            photonView.RPC("SendInfo", RpcTarget.All);
+            photonView.RPC("SendInfoMaster", RpcTarget.MasterClient);
         }
     }
 
     [PunRPC]
-    void SendInfo()
+    void SendInfoMaster(PhotonMessageInfo info)
     {
-        Debug.Log(PhotonNetwork.GetPing());
+        photonView.RPC("ReceiveInfoMaster", RpcTarget.All, info.Sender.ActorNumber);
+    }
+    
+    [PunRPC]
+    void ReceiveInfoMaster(int actor)
+    {
+        Debug.Log(actor);
     }
 }
