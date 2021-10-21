@@ -6,6 +6,7 @@ using UnityEngine;
 public class TestRPCS : MonoBehaviour
 {
     private PhotonView photonView;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,21 +16,25 @@ public class TestRPCS : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && photonView.IsMine)
         {
-            photonView.RPC("SendInfoMaster", RpcTarget.MasterClient);
+            photonView.RPC(nameof(SendInfoMaster), RpcTarget.MasterClient);
         }
     }
 
     [PunRPC]
-    void SendInfoMaster(PhotonMessageInfo info)
+    void SendInfoMaster()
     {
-        photonView.RPC("ReceiveInfoMaster", RpcTarget.All, info.Sender.ActorNumber);
+        Debug.Log("Sending to clients");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC(nameof(ReceiveInfoMaster), RpcTarget.All);
+        }
     }
-    
+
     [PunRPC]
-    void ReceiveInfoMaster(int actor)
+    void ReceiveInfoMaster()
     {
-        Debug.Log(actor);
+        Debug.Log("Received from Master");
     }
 }
