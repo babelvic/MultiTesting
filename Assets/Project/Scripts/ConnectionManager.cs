@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ConnectionManager : MonoBehaviourPunCallbacks
 {
@@ -29,5 +30,11 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected To Master");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Join Room");
+        PhotonNetwork.Instantiate("Cube", Random.insideUnitCircle, Quaternion.identity);
     }
 }
