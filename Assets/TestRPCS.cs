@@ -18,6 +18,7 @@ public class TestRPCS : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && photonView.IsMine)
         {
+            Debug.Log("Sending to master");
             photonView.RPC(nameof(SendInfoMaster), RpcTarget.MasterClient);
         }
     }
