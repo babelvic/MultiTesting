@@ -25,6 +25,7 @@ public class TopDownMovement : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        Debug.Log("aa");
+        var input = ctx.ReadValue<Vector2>();
+        movement = new Vector3(input.x,0,input.y);
     }
 }

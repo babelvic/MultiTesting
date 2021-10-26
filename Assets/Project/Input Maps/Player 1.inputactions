@@ -1,0 +1,52 @@
+{
+    "name": "Player 1",
+    "maps": [
+        {
+            "name": "Movement",
+            "id": "e7bea704-60da-4953-bfb9-012c5c31d9a1",
+            "actions": [
+                {
+                    "name": "OnMoveLeft",
+                    "type": "Value",
+                    "id": "14bed276-7808-4e31-8e99-a8f6112c4226",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "OnMoveRight",
+                    "type": "Value",
+                    "id": "78aa8bb9-b02e-4dc0-93bf-34d36755f67c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ffb69256-5a5d-4534-963f-51eba2994277",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnMoveLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3cb3a39a-dd7f-48f8-8312-507c472a851d",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnMoveRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
