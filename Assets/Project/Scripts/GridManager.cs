@@ -1,0 +1,91 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+
+public class GridManager : MonoBehaviour
+{
+    public int width, height;
+    public float cellSize;
+
+    private GridCell[,] _grid;
+
+    private GameObject _primitive;
+
+    private Vector3 _startPosition;
+
+    private Camera _camera;
+
+    private void Start()
+    {
+        _camera = Camera.main ?? FindObjectOfType<Camera>();
+        
+        _startPosition = transform.position;
+        
+        _grid = new GridCell[width, height];
+
+        _primitive = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        _primitive.GetComponent<Collider>().enabled = false;
+        _primitive.layer = 1 << LayerMask.NameToLayer("BuildableArea");
+        Destroy(_primitive);
+        
+        CreateGrid();
+    }
+
+    #region GridCreation
+
+    void CreateGrid()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                _grid[x, y].cellPopulated = false;
+                _grid[x, y].worldPosition = GetPositionInWorldPos(x, y);
+
+                var visualCell = Instantiate(_primitive, _grid[x, y].worldPosition, Quaternion.identity);
+                visualCell.transform.parent = transform;
+                visualCell.transform.localScale = new Vector3(cellSize * .8f, .2f, cellSize * .8f);
+                visualCell.GetComponent<MeshRenderer>().material.color = Color.yellow;
+            }
+        }
+    }
+
+    Vector3 GetPositionInWorldPos(int x, int y)
+    {
+        var center = new Vector3((width - 1) * cellSize, 0, (height - 1) * cellSize) * .5f;
+        var setGridPos = _startPosition - center;
+        var pos = new Vector3(x * cellSize, 0, y * cellSize) + setGridPos;
+
+        return pos;
+    }
+
+    private struct GridCell
+    {
+        public Vector3 worldPosition;
+        public bool cellPopulated;
+    }
+
+    #endregion
+
+
+    #region PopulateGrid
+
+    private Vector3 GetMousePos()
+    {
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("BuildableArea")))
+        {
+            var point = new Vector3(raycastHit.point.x, transform.position.y, raycastHit.point.z);
+            return point;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    #endregion
+    
+}
