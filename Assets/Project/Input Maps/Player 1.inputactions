@@ -20,6 +20,38 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "OnTop",
+                    "type": "Button",
+                    "id": "2434a2f7-b259-410a-ab03-4556277c933a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "OnBottom",
+                    "type": "Button",
+                    "id": "b8fa84ed-9dee-495f-bcd5-2075f8edab3a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "OnLeft",
+                    "type": "Button",
+                    "id": "b45d8585-8b68-4a8e-aad8-7c3f0ffe51d8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "OnRight",
+                    "type": "Button",
+                    "id": "adfec630-ff34-4ee4-82f0-6bac31e19c97",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -42,6 +74,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "OnMoveRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d6b6d6c8-0084-49f3-abea-964ba40e945c",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnTop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "52a056ee-36f8-4a3b-9dae-631e866ab151",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnBottom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f610f6a1-11d0-4a83-9bc0-e7cf93f0f27b",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a97cb4cf-3751-4b43-a291-4328e7ff4754",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

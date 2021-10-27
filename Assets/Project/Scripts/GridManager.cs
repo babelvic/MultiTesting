@@ -27,7 +27,7 @@ public class GridManager : MonoBehaviour
 
         _primitive = GameObject.CreatePrimitive(PrimitiveType.Cube);
         _primitive.GetComponent<Collider>().enabled = false;
-        _primitive.layer = 1 << LayerMask.NameToLayer("BuildableArea");
+        _primitive.layer = LayerMask.NameToLayer("BuildableArea");
         Destroy(_primitive);
         
         CreateGrid();
