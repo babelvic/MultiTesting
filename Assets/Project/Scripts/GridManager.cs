@@ -26,11 +26,20 @@ public class GridManager : MonoBehaviour
         _grid = new GridCell[width, height];
 
         _primitive = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        _primitive.GetComponent<Collider>().enabled = false;
         _primitive.layer = LayerMask.NameToLayer("BuildableArea");
         Destroy(_primitive);
         
         CreateGrid();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var pos = GetGridPos(GetMousePos());
+            var index = (pos.x * height) + pos.y;
+            transform.GetChild(index).GetComponent<MeshRenderer>().enabled = false;
+        }
     }
 
     #region GridCreation
@@ -78,6 +87,7 @@ public class GridManager : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("BuildableArea")))
         {
             var point = new Vector3(raycastHit.point.x, transform.position.y, raycastHit.point.z);
+            print(point);
             return point;
         }
         else
@@ -86,6 +96,18 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    private Vector2Int GetGridPos(Vector3 worldPos)
+    {
+        var diffX = (worldPos.x) + ((width * cellSize) * .5f);
+        var diffY = (worldPos.z) + ((height * cellSize) * .5f);
+        int x = Mathf.FloorToInt((diffX) / (cellSize));
+        int y = Mathf.FloorToInt((diffY) / (cellSize));
+        
+        print($"{x} / {y}");
+
+        return new Vector2Int(x, y);
+    }
+    
     #endregion
     
 }
