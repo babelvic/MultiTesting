@@ -17,6 +17,8 @@ public class GridManager : MonoBehaviour
 
     private Camera _camera;
 
+    public levelObjectData levelObject;
+
     private void Start()
     {
         _camera = Camera.main ?? FindObjectOfType<Camera>();
@@ -39,6 +41,12 @@ public class GridManager : MonoBehaviour
             var pos = GetGridPos(GetMousePos());
             var index = (pos.x * height) + pos.y;
             transform.GetChild(index).GetComponent<MeshRenderer>().enabled = false;
+
+            if (!_grid[pos.x, pos.y].cellPopulated)
+            {
+                _grid[pos.x, pos.y].cellPopulated = true;
+                Instantiate(levelObject.model, _grid[pos.x, pos.y].worldPosition, Quaternion.identity);
+            }
         }
     }
 
@@ -56,7 +64,7 @@ public class GridManager : MonoBehaviour
                 var visualCell = Instantiate(_primitive, _grid[x, y].worldPosition, Quaternion.identity);
                 visualCell.transform.parent = transform;
                 visualCell.transform.localScale = new Vector3(cellSize * .8f, .2f, cellSize * .8f);
-                visualCell.GetComponent<MeshRenderer>().material.color = Color.yellow;
+                visualCell.GetComponent<MeshRenderer>().material.color = new Color(0.96f, 0.97f, 0.42f, 0.53f);
             }
         }
     }
@@ -77,8 +85,8 @@ public class GridManager : MonoBehaviour
     }
 
     #endregion
-
-
+    
+    
     #region PopulateGrid
 
     private Vector3 GetMousePos()
