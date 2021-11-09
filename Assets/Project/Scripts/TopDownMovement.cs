@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Composites;
 using UnityEngine.InputSystem.HID;
 
-[RequireComponent(typeof(Rigidbody), typeof(BoxCollider))]
+[RequireComponent( typeof(BoxCollider))]
 public class TopDownMovement : MonoBehaviour, IPunObservable
 {
     public float speed = 5;
@@ -25,6 +25,10 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
     {
         rb = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
+        if (!_photonView.IsMine)
+        {
+            Destroy(rb);
+        }
     }
 
     void Update()
