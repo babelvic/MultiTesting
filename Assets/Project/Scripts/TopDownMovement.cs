@@ -18,6 +18,8 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
     public Action<InputAction.CallbackContext> OnBottomButtonPress;
     public Action<InputAction.CallbackContext> OnRightButtonPress;
     public Action<InputAction.CallbackContext> OnLeftButtonPress;
+    [SerializeField] private Vector3 lastReceivedPos;
+
 
     private void Start()
     {
@@ -28,8 +30,14 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
     void Update()
     {
         if (_photonView.IsMine)
+        {
             if (movement.sqrMagnitude > 0)
                 transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, lastReceivedPos, 0.05f);
+        }
     }
 
     private void FixedUpdate()
@@ -73,6 +81,13 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        //serialization
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+        }
+        else
+        {
+            lastReceivedPos = (Vector3)stream.ReceiveNext();
+        }
     }
 }
