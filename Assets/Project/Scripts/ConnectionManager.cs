@@ -20,7 +20,7 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.InRoom)
         {
-            playerTransform = PhotonNetwork.Instantiate("Cube", Random.insideUnitCircle, Quaternion.identity).transform;
+            playerTransform = PhotonNetwork.Instantiate("P1", transform.position, Quaternion.identity).transform;
         }
     }
 
