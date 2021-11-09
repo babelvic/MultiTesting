@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Subpiece Data", menuName = "SubpieceData", order = 0)]
 public class SubpieceData : ObjectData
 {
-    //Dict<ToolData, PieceData>
+    Dictionary<ToolData, PieceData> toolToPiece = new Dictionary<ToolData, PieceData>();
 }
