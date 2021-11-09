@@ -83,19 +83,13 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
     {
         if (stream.IsWriting)
         {
-            if (!_photonView.IsMine)
-            {
-                Debug.Log("sending");
-                stream.SendNext(transform.position);
-            }
+            Debug.Log("sending");
+            stream.SendNext(transform.position);
         }
         else
         {
-            if (!_photonView.IsMine)
-            {
-                Debug.Log("sending");
-                lastReceivedPos = (Vector3)stream.ReceiveNext();
-            }
+            Debug.Log("receiving");
+            lastReceivedPos = (Vector3)stream.ReceiveNext();
         }
     }
 }
