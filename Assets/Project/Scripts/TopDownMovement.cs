@@ -37,7 +37,7 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
         if (_photonView.IsMine)
         {
             if (movement.sqrMagnitude > 0)
-                transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(movement, Vector3.up), 0.1f);
         }
         else
         {
