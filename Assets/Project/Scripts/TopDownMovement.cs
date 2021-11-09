@@ -19,6 +19,7 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
     public Action<InputAction.CallbackContext> OnRightButtonPress;
     public Action<InputAction.CallbackContext> OnLeftButtonPress;
     [SerializeField] private Vector3 lastReceivedPos;
+    [SerializeField] private Quaternion lastReceivedRot;
 
 
     private void Start()
@@ -41,6 +42,7 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
         else
         {
             transform.position = Vector3.Lerp(transform.position, lastReceivedPos, 0.05f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, lastReceivedRot, 0.05f);
         }
     }
 
@@ -89,11 +91,13 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
         {
             Debug.Log("sending");
             stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
         }
         else
         {
             Debug.Log("receiving");
             lastReceivedPos = (Vector3)stream.ReceiveNext();
+            lastReceivedRot = (Quaternion)stream.ReceiveNext();
         }
     }
 }
