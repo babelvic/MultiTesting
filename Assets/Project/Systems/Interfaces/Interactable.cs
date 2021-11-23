@@ -5,5 +5,5 @@
 
 public interface Interactor
 {
-    public void Interact(Interactable interactable);
+    public abstract void Interact(Interactable interactable);
 }
