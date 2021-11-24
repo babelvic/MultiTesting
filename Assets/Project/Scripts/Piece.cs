@@ -9,5 +9,4 @@ public class Piece : MonoBehaviour, Interactable, IUseObjectData
     {
         throw new System.NotImplementedException();
     }
-
 }

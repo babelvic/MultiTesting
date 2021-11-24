@@ -10,7 +10,7 @@ public abstract class Tool : MonoBehaviour, IUseObjectData, Interactor
     public void DetectInteraction()
     {
         Collider[] objects = Physics.OverlapSphere(this.transform.position, 5f, 1 << LayerMask.NameToLayer("Subpiece"));
-        var subPiceDetected = objects.Where(o => o.GetComponent<Subpiece>()).FirstOrDefault();
-        subPiceDetected.GetComponent<Subpiece>().Interact(this);
+        var subPiceDetected = objects.FirstOrDefault(o => o.GetComponent<Subpiece>());
+        if (subPiceDetected is not null) subPiceDetected.GetComponent<Subpiece>().Interact(this);
     }
 }

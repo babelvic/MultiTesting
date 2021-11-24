@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 
 public class Hammer : Tool
 {
@@ -13,8 +10,7 @@ public class Hammer : Tool
     
     async void HammerInteraction(Interactable interactable)
     {
+        print("hammerInteraction");
         await Task.Delay(TimeSpan.FromSeconds(5f));
-        
-        
     }
 }
