@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public abstract class Subpiece : MonoBehaviour, Interactable
+public class Subpiece : MonoBehaviour, Interactable
 {
     public SubpieceData subPieceData;
 
-    public abstract void Interact(Interactor interactor);
+    // public void Interact(Interactor interactor)
+    // {
+    //     print("Interact");
+    // }
 }

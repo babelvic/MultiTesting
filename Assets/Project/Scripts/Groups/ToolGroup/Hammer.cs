@@ -3,14 +3,13 @@ using System.Threading.Tasks;
 
 public class Hammer : Tool
 {
-    public override void Interact(Interactable interactable)
+    public override PieceData Interact(Interactable interactable)
     {
-        HammerInteraction(interactable);
+        return HammerInteraction(interactable);
     }
     
-    async void HammerInteraction(Interactable interactable)
+    public PieceData HammerInteraction(Interactable interactable)
     {
-        print("hammerInteraction");
-        await Task.Delay(TimeSpan.FromSeconds(5f));
+        return ProcessManager.Instance.Process(toolData, (interactable as Subpiece)?.subPieceData);
     }
 }

@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InteractionManager : MonoBehaviour
 {
-    private GameObject _toolRef, _objectRef;
+    [SerializeField] private GameObject _toolRef, _objectRef;
 
     private void Update()
     {
@@ -13,6 +14,7 @@ public class InteractionManager : MonoBehaviour
         {
             GetRefs();
         }
+        
 
         if (_toolRef != null && _objectRef != null)
         {
@@ -20,8 +22,16 @@ public class InteractionManager : MonoBehaviour
             {
                 var toolInteractor = _toolRef.GetComponent<Interactor>();
                 var objectInteractable = _objectRef.GetComponent<Interactable>();
-                toolInteractor.Interact(objectInteractable);
-                objectInteractable.Interact(toolInteractor);
+                var pieceData = toolInteractor?.Interact(objectInteractable);
+
+                if (pieceData)
+                {
+                    Destroy(objectInteractable as Component);
+                    var piece = _objectRef.AddComponent<Piece>();
+                    piece.pieceData = pieceData;
+                }
+                
+                // objectInteractable.Interact(toolInteractor);
             }
         }
     }

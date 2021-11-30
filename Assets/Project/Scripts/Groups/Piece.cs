@@ -1,9 +1,9 @@
 ﻿using Photon.Pun;
 using UnityEngine;
 
-public abstract class Piece : MonoBehaviour, Interactable
+public class Piece : MonoBehaviour, Interactable
 {
     public PieceData pieceData;
 
-    public abstract void Interact(Interactor interactor);
+    // public abstract void Interact(Interactor interactor);
 }
