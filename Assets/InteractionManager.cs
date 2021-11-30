@@ -18,8 +18,10 @@ public class InteractionManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.I))
             {
-                _toolRef.GetComponent<Interactor>().Interact(_objectRef.GetComponent<Interactable>());
-                _objectRef.GetComponent<Interactable>().Interact(_toolRef.GetComponent<Interactor>());
+                var toolInteractor = _toolRef.GetComponent<Interactor>();
+                var objectInteractable = _objectRef.GetComponent<Interactable>();
+                toolInteractor.Interact(objectInteractable);
+                objectInteractable.Interact(toolInteractor);
             }
         }
     }

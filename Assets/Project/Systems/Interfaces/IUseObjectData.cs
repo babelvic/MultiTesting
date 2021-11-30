@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IUseObjectData
 {
-    public ObjectData Data { get;}
+    public ObjectData Data { get; set; }
 }

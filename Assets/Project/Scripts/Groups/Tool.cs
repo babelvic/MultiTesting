@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 
-public abstract class Tool : MonoBehaviour, IUseObjectData, Interactor
+public abstract class Tool : MonoBehaviour, Interactor
 {
-    private ToolData _toolData;
-    public ObjectData Data => _toolData;
+    public ToolData toolData;
+
     public abstract void Interact(Interactable interactable);
 
     public void DetectInteraction()
