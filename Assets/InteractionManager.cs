@@ -20,8 +20,7 @@ public class InteractionManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && _photonView.IsMine)
         {
-            GetRefs();
-            _photonView.RPC(nameof(SendMessage), RpcTarget.All, "pinga");
+            _photonView.RPC(nameof(SendMessage), RpcTarget.All, _photonView.ViewID);
         }
         
 
@@ -45,22 +44,27 @@ public class InteractionManager : MonoBehaviour
         }
     }
     
-    public void GetRefs()
+    public void GetRefs(int id)
     {
-        if(_toolRef == null) _toolRef = RefDetector(typeof(Interactor));
-        if(_objectRef == null) _objectRef = RefDetector(typeof(Interactable));
-
-        if (_toolRef != null)
+        if (id == _photonView.ViewID)
         {
-            _toolRef.transform.position = transform.position + Vector3.up * 2;
-            _toolRef.transform.parent = transform;
-        }
+            Debug.Log($"Execute GetRefs in {id}");
+            if(_toolRef == null) _toolRef = RefDetector(typeof(Interactor));
+            if(_objectRef == null) _objectRef = RefDetector(typeof(Interactable));
 
-        if (_objectRef != null)
-        {
-            _objectRef.transform.position = transform.position + transform.forward * 2;
-            _objectRef.transform.parent = transform;
+            if (_toolRef != null)
+            {
+                _toolRef.transform.position = transform.position + Vector3.up * 2;
+                _toolRef.transform.parent = transform;
+            }
+
+            if (_objectRef != null)
+            {
+                _objectRef.transform.position = transform.position + transform.forward * 2;
+                _objectRef.transform.parent = transform;
+            }
         }
+        
     }
 
     public GameObject RefDetector(Type type)
@@ -74,9 +78,9 @@ public class InteractionManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SendMessage(string msg)
+    public void SendMessage(int id)
     {
-        Debug.Log(msg);
+        GetRefs(id);
     }
 
     private void OnDrawGizmos()
