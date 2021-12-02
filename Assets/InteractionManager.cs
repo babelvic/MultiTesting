@@ -31,16 +31,6 @@ public class InteractionManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.I) && _photonView.IsMine)
             {
-                var toolInteractor = _toolRef.GetComponent<Interactor>();
-                var objectInteractable = _objectRef.GetComponent<Interactable>();
-                var pieceData = toolInteractor?.Interact(objectInteractable);
-
-                if (pieceData)
-                {
-                    Destroy(objectInteractable as Component);
-                    var piece = _objectRef.AddComponent<Piece>();
-                    piece.pieceData = pieceData;
-                }
                 // objectInteractable.Interact(toolInteractor);
             }
         }
@@ -103,7 +93,16 @@ public class InteractionManager : MonoBehaviour
     [PunRPC]
     public void InteractWithRefs()
     {
-        
+        var toolInteractor = _toolRef.GetComponent<Interactor>();
+        var objectInteractable = _objectRef.GetComponent<Interactable>();
+        var pieceData = toolInteractor?.Interact(objectInteractable);
+
+        if (pieceData)
+        {
+            Destroy(objectInteractable as Component);
+            var piece = _objectRef.AddComponent<Piece>();
+            piece.pieceData = pieceData;
+        }
     }
 
     private void OnDrawGizmos()
