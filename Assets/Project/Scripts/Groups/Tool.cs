@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class Tool : MonoBehaviour, Interactor
+public class Tool : NetworkedMonobehaviour, Interactor
 {
     public ToolData toolData;
 

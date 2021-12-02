@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,7 +21,9 @@ public class InteractionManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && _photonView.IsMine)
         {
-            _photonView.RPC(nameof(SendMessage), RpcTarget.All, _photonView.ViewID);
+            GetRefs(out var id, out var position);
+            
+            _photonView.RPC(nameof(SendMessage), RpcTarget.All, id, position);
         }
         
 
@@ -43,28 +46,29 @@ public class InteractionManager : MonoBehaviour
             }
         }
     }
-    
-    public void GetRefs(int id)
+
+    private void GetRefs(out int networkMonoBehaviourID, out Vector3 position)
     {
-        if (id == _photonView.ViewID)
+        Debug.Log($"Execute GetRefs in {_photonView.ViewID}");
+        if (_toolRef == null) _toolRef = RefDetector(typeof(Interactor));
+        if (_objectRef == null) _objectRef = RefDetector(typeof(Interactable));
+
+        if (_toolRef != null)
         {
-            Debug.Log($"Execute GetRefs in {id}");
-            if(_toolRef == null) _toolRef = RefDetector(typeof(Interactor));
-            if(_objectRef == null) _objectRef = RefDetector(typeof(Interactable));
-
-            if (_toolRef != null)
-            {
-                _toolRef.transform.position = transform.position + Vector3.up * 2;
-                _toolRef.transform.parent = transform;
-            }
-
-            if (_objectRef != null)
-            {
-                _objectRef.transform.position = transform.position + transform.forward * 2;
-                _objectRef.transform.parent = transform;
-            }
+            networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
+            position = transform.position + Vector3.up * 2;
         }
-        
+
+        else if (_objectRef != null)
+        {
+            networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
+            position = transform.position + transform.forward * 2;
+        }
+        else
+        {
+            position = Vector3.zero;
+            networkMonoBehaviourID = -1;
+        }
     }
 
     public GameObject RefDetector(Type type)
@@ -78,9 +82,11 @@ public class InteractionManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SendMessage(int id)
+    public void SendMessage(int id, Vector3 position)
     {
-        GetRefs(id);
+        var networkMonoBehaviour = FindObjectsOfType<NetworkedMonobehaviour>().First(n => n.ID == id);
+        networkMonoBehaviour.transform.position = position;
+        networkMonoBehaviour.transform.parent = transform;
     }
 
     private void OnDrawGizmos()

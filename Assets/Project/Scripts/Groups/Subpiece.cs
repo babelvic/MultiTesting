@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Subpiece : MonoBehaviour, Interactable
+public class Subpiece : NetworkedMonobehaviour, Interactable
 {
     public SubpieceData subPieceData;
 }
