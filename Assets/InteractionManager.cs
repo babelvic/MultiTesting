@@ -50,7 +50,7 @@ public class InteractionManager : MonoBehaviour
         
         if (_objectRef != null)
         {
-            networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
+            networkMonoBehaviourID = _objectRef.GetComponent<NetworkedMonobehaviour>().ID;
             position = transform.position + transform.forward * 2;
         }
         else
