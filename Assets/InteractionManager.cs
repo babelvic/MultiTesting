@@ -23,13 +23,13 @@ public class InteractionManager : MonoBehaviour
         {
             GetRefs(out var id, out var position);
             
-            _photonView.RPC(nameof(SendMessage), RpcTarget.All, id, position);
+            _photonView.RPC(nameof(FindRefs), RpcTarget.All, id, position);
         }
         
 
         if (_toolRef != null && _objectRef != null)
         {
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.I) && _photonView.IsMine)
             {
                 var toolInteractor = _toolRef.GetComponent<Interactor>();
                 var objectInteractable = _objectRef.GetComponent<Interactable>();
@@ -41,7 +41,6 @@ public class InteractionManager : MonoBehaviour
                     var piece = _objectRef.AddComponent<Piece>();
                     piece.pieceData = pieceData;
                 }
-                
                 // objectInteractable.Interact(toolInteractor);
             }
         }
@@ -82,13 +81,29 @@ public class InteractionManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SendMessage(int id, Vector3 position)
+    public void FindRefs(int id, Vector3 position)
     {
         if (id == -1) return;
         
         var networkMonoBehaviour = FindObjectsOfType<NetworkedMonobehaviour>().First(n => n.ID == id);
         networkMonoBehaviour.transform.position = position;
         networkMonoBehaviour.transform.parent = transform;
+        
+        switch (networkMonoBehaviour)
+        {
+            case Interactable _:
+                _objectRef = networkMonoBehaviour.gameObject;
+                break;
+            case Interactor _:
+                _toolRef = networkMonoBehaviour.gameObject;
+                break;
+        }
+    }
+
+    [PunRPC]
+    public void InteractWithRefs()
+    {
+        
     }
 
     private void OnDrawGizmos()
