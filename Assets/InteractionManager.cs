@@ -46,18 +46,18 @@ public class InteractionManager : MonoBehaviour
         {
             networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
             position = transform.position + Vector3.up * 2;
+            return;
         }
         
         if (_objectRef != null)
         {
             networkMonoBehaviourID = _objectRef.GetComponent<NetworkedMonobehaviour>().ID;
             position = transform.position + transform.forward * 2;
+            return;
         }
-        else
-        {
-            position = Vector3.zero;
-            networkMonoBehaviourID = -1;
-        }
+
+        networkMonoBehaviourID = -1;
+        position = Vector3.zero;
     }
 
     public GameObject RefDetector(Type type)
