@@ -21,7 +21,7 @@ public class InteractionManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && _photonView.IsMine)
         {
             GetRefs();
-            _photonView.RPC(nameof(SendMessage), RpcTarget.All);
+            _photonView.RPC(nameof(SendMessage), RpcTarget.All, "pinga");
         }
         
 
@@ -74,7 +74,7 @@ public class InteractionManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SendMessage(string msg = "work")
+    public void SendMessage(string msg)
     {
         Debug.Log(msg);
     }

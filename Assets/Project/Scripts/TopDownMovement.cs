@@ -89,13 +89,11 @@ public class TopDownMovement : MonoBehaviour, IPunObservable
     {
         if (stream.IsWriting)
         {
-            Debug.Log("sending");
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
         }
         else
         {
-            Debug.Log("receiving");
             lastReceivedPos = (Vector3)stream.ReceiveNext();
             lastReceivedRot = (Quaternion)stream.ReceiveNext();
         }

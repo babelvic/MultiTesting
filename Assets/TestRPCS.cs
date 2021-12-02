@@ -18,7 +18,7 @@ public class TestRPCS : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && photonView.IsMine)
         {
-            Debug.Log("Sending to master");
+            //Debug.Log("Sending to master");
             photonView.RPC(nameof(SendInfoMaster), RpcTarget.MasterClient);
         }
     }
@@ -26,7 +26,7 @@ public class TestRPCS : MonoBehaviour
     [PunRPC]
     void SendInfoMaster()
     {
-        Debug.Log("Sending to clients");
+        // Debug.Log("Sending to clients");
         if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC(nameof(ReceiveInfoMaster), RpcTarget.All);
@@ -36,6 +36,6 @@ public class TestRPCS : MonoBehaviour
     [PunRPC]
     void ReceiveInfoMaster()
     {
-        Debug.Log("Received from Master");
+        // Debug.Log("Received from Master");
     }
 }
