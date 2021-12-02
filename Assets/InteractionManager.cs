@@ -18,7 +18,7 @@ public class InteractionManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && _photonView.IsMine)
         {
             GetRefs();
             _photonView.RPC(nameof(SendMessage), RpcTarget.All);
