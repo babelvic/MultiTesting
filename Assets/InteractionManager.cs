@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,11 +9,19 @@ public class InteractionManager : MonoBehaviour
 {
     [SerializeField] private GameObject _toolRef, _objectRef;
 
+    private PhotonView _photonView;
+
+    private void Start()
+    {
+        _photonView = GetComponent<PhotonView>();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
             GetRefs();
+            _photonView.RPC(nameof(SendMessage), RpcTarget.All);
         }
         
 
@@ -62,6 +71,12 @@ public class InteractionManager : MonoBehaviour
         }
         
         return null;
+    }
+
+    [PunRPC]
+    public void SendMessage(string msg = "work")
+    {
+        Debug.Log(msg);
     }
 
     private void OnDrawGizmos()
