@@ -47,8 +47,8 @@ public class InteractionManager : MonoBehaviour
             networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
             position = transform.position + Vector3.up * 2;
         }
-
-        else if (_objectRef != null)
+        
+        if (_objectRef != null)
         {
             networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
             position = transform.position + transform.forward * 2;
