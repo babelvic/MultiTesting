@@ -84,6 +84,8 @@ public class InteractionManager : MonoBehaviour
     [PunRPC]
     public void SendMessage(int id, Vector3 position)
     {
+        if (id == -1) return;
+        
         var networkMonoBehaviour = FindObjectsOfType<NetworkedMonobehaviour>().First(n => n.ID == id);
         networkMonoBehaviour.transform.position = position;
         networkMonoBehaviour.transform.parent = transform;
