@@ -2021,7 +2021,7 @@ GameObject:
   - component: {fileID: 919132147679803967}
   - component: {fileID: 919132147679803969}
   - component: {fileID: 919132147679803968}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MesaAtornillado
   m_TagString: Untagged
   m_Icon: {fileID: 0}
