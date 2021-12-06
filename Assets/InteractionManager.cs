@@ -46,12 +46,12 @@ public class InteractionManager : MonoBehaviour
             case Tool tool:
                 currentTool = tool.gameObject;
                 networkMonoBehaviourID = tool.GetComponent<NetworkedMonobehaviour>().ID;
-                GetComponent<Collider>().enabled = false;
+                tool.GetComponent<Collider>().enabled = false;
                 position = transform.position + Vector3.up * 2;
                 break;
             case  Subpiece subpiece:
                 currentItem = subpiece.gameObject;
-                GetComponent<Collider>().enabled = false;
+                subpiece.GetComponent<Collider>().enabled = false;
                 networkMonoBehaviourID = subpiece.GetComponent<NetworkedMonobehaviour>().ID;
                 position = transform.position + transform.forward * 2;
                 break;
