@@ -39,23 +39,30 @@ public class InteractionManager : MonoBehaviour
     private void GetRefs(out int networkMonoBehaviourID, out Vector3 position)
     {
         Debug.Log($"Execute GetRefs in {_photonView.ViewID}");
-        if (_toolRef == null) _toolRef = RefDetector(typeof(Interactor));
-        if (_objectRef == null) _objectRef = RefDetector(typeof(Interactable));
-
-        if (_toolRef != null)
+        if (_toolRef == null)
         {
-            networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
-            position = transform.position + Vector3.up * 2;
-            return;
+            _toolRef = RefDetector(typeof(Interactor));
+            
+            if (_toolRef != null)
+            {
+                networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
+                position = transform.position + Vector3.up * 2;
+                return;
+            }
+        }
+
+        if (_objectRef == null)
+        {
+            _objectRef = RefDetector(typeof(Interactable));
+            
+            if (_objectRef != null)
+            {
+                networkMonoBehaviourID = _objectRef.GetComponent<NetworkedMonobehaviour>().ID;
+                position = transform.position + transform.forward * 2;
+                return;
+            }
         }
         
-        if (_objectRef != null)
-        {
-            networkMonoBehaviourID = _objectRef.GetComponent<NetworkedMonobehaviour>().ID;
-            position = transform.position + transform.forward * 2;
-            return;
-        }
-
         networkMonoBehaviourID = -1;
         position = Vector3.zero;
     }
