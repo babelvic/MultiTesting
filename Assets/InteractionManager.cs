@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 public class InteractionManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _toolRef, _objectRef;
+    public GameObject currentTool, currentItem;
 
     private PhotonView _photonView;
 
@@ -27,7 +27,7 @@ public class InteractionManager : MonoBehaviour
         }
         
 
-        if (_toolRef != null && _objectRef != null)
+        if (currentTool != null && currentItem != null)
         {
             if (Input.GetKeyDown(KeyCode.I) && _photonView.IsMine)
             {
@@ -39,42 +39,42 @@ public class InteractionManager : MonoBehaviour
     private void GetRefs(out int networkMonoBehaviourID, out Vector3 position)
     {
         Debug.Log($"Execute GetRefs in {_photonView.ViewID}");
-        if (_toolRef == null)
-        {
-            _toolRef = RefDetector(typeof(Interactor));
-            
-            if (_toolRef != null)
-            {
-                networkMonoBehaviourID = _toolRef.GetComponent<NetworkedMonobehaviour>().ID;
-                position = transform.position + Vector3.up * 2;
-                return;
-            }
-        }
+        var interactable = RefDetector<Interactable>();
 
-        if (_objectRef == null)
+        switch (interactable)
         {
-            _objectRef = RefDetector(typeof(Interactable));
-            
-            if (_objectRef != null)
-            {
-                networkMonoBehaviourID = _objectRef.GetComponent<NetworkedMonobehaviour>().ID;
+            case Tool tool:
+                currentTool = tool.gameObject;
+                networkMonoBehaviourID = tool.GetComponent<NetworkedMonobehaviour>().ID;
+                GetComponent<Collider>().enabled = false;
+                position = transform.position + Vector3.up * 2;
+                break;
+            case  Subpiece subpiece:
+                currentItem = subpiece.gameObject;
+                GetComponent<Collider>().enabled = false;
+                networkMonoBehaviourID = subpiece.GetComponent<NetworkedMonobehaviour>().ID;
                 position = transform.position + transform.forward * 2;
-                return;
-            }
+                break;
+            case Workbench _:
+                networkMonoBehaviourID = -1;
+                position = default;
+                break;
+            default:
+                networkMonoBehaviourID = -1;
+                position = Vector3.zero;
+                break;
         }
-        
-        networkMonoBehaviourID = -1;
-        position = Vector3.zero;
+        interactable?.Interact(this);
     }
 
-    public GameObject RefDetector(Type type)
+    public T RefDetector<T>()
     {
         if (Physics.SphereCast(transform.position, 1f, transform.forward, out RaycastHit hitInfo, 2f, 1 << LayerMask.NameToLayer("Interactable")))
         {
-            return hitInfo.transform.GetComponent(type) != null ? hitInfo.transform.gameObject : null;
+            return hitInfo.transform.GetComponent<T>();
         }
         
-        return null;
+        return default;
     }
 
     [PunRPC]
@@ -89,10 +89,10 @@ public class InteractionManager : MonoBehaviour
         switch (networkMonoBehaviour)
         {
             case Interactable _:
-                _objectRef = networkMonoBehaviour.gameObject;
+                currentItem = networkMonoBehaviour.gameObject;
                 break;
             case Interactor _:
-                _toolRef = networkMonoBehaviour.gameObject;
+                currentTool = networkMonoBehaviour.gameObject;
                 break;
         }
     }
@@ -100,14 +100,14 @@ public class InteractionManager : MonoBehaviour
     [PunRPC]
     public void InteractWithRefs()
     {
-        var toolInteractor = _toolRef.GetComponent<Interactor>();
-        var objectInteractable = _objectRef.GetComponent<Interactable>();
+        var toolInteractor = currentTool.GetComponent<Interactor>();
+        var objectInteractable = currentItem.GetComponent<Interactable>();
         var pieceData = toolInteractor?.Interact(objectInteractable);
 
         if (pieceData)
         {
             Destroy(objectInteractable as Component);
-            var piece = _objectRef.AddComponent<Piece>();
+            var piece = currentItem.AddComponent<Piece>();
             piece.pieceData = pieceData;
         }
     }

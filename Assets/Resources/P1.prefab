@@ -281,5 +281,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8316bb6a3990a4d80dbd45a0f6ba66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _toolRef: {fileID: 0}
-  _objectRef: {fileID: 0}
+  currentTool: {fileID: 0}
+  currentItem: {fileID: 0}

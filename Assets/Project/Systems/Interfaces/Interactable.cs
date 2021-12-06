@@ -1,9 +1,9 @@
 ﻿public interface Interactable
 {
-    // public void Interact(Interactor interactor);
+    public void Interact(InteractionManager interactionManager); // E
 }
 
 public interface Interactor
 {
-    public abstract PieceData Interact(Interactable interactable);
+    public abstract PieceData Interact(Interactable interactable); // I
 }

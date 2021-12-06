@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Workbench : MonoBehaviour
+public class Workbench : MonoBehaviour, Interactable
 {
     public Vector3 itemPosition;
     public Subpiece currentSubpiece;
@@ -20,5 +20,10 @@ public class Workbench : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position + itemPosition, Vector3.one);
+    }
+
+    public void Interact(InteractionManager interactionManager)
+    {
+        SetSubpiece(interactionManager.currentItem.GetComponent<Subpiece>());
     }
 }
