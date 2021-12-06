@@ -12,7 +12,7 @@ public class Workbench : MonoBehaviour, Interactable
     public void SetSubpiece(Subpiece subpiece)
     {
         currentSubpiece = subpiece;
-        itemPosition = subpiece.transform.position;
+        subpiece.transform.position = itemPosition;
         subpiece.transform.parent = transform;
     }
 
