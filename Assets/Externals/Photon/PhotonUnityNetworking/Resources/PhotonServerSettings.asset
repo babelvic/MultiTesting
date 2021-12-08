@@ -42,6 +42,8 @@ MonoBehaviour:
   - SendMessage
   - FindRefs
   - InteractWithRefs
+  - Interact
+  - InteractRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

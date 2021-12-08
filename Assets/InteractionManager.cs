@@ -6,98 +6,54 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InteractionManager : MonoBehaviour
+public class InteractionManager : NetworkedMonoBehaviour
 {
     public GameObject currentTool, currentItem;
-
-    private PhotonView _photonView;
+    public LayerMask interactionLayer;
+    private PhotonView photonView;
 
     private void Start()
     {
-        _photonView = GetComponent<PhotonView>();
+        photonView = GetComponent<PhotonView>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && _photonView.IsMine)
+        if (Input.GetKeyDown(KeyCode.E) && photonView.IsMine)
         {
-            GetRefs(out var id, out var position);
-            
-            _photonView.RPC(nameof(FindRefs), RpcTarget.All, id, position);
+            TryInteraction();
         }
         
 
         if (currentTool != null && currentItem != null)
         {
-            if (Input.GetKeyDown(KeyCode.I) && _photonView.IsMine)
+            if (Input.GetKeyDown(KeyCode.I) && photonView.IsMine)
             {
                 // objectInteractable.Interact(toolInteractor);
             }
         }
     }
 
-    private void GetRefs(out int networkMonoBehaviourID, out Vector3 position)
-    {
-        Debug.Log($"Execute GetRefs in {_photonView.ViewID}");
-        var interactable = RefDetector<Interactable>();
-
-        switch (interactable)
-        {
-            case Tool tool:
-                currentTool = tool.gameObject;
-                networkMonoBehaviourID = tool.GetComponent<NetworkedMonobehaviour>().ID;
-                tool.GetComponent<Collider>().enabled = false;
-                position = transform.position + Vector3.up * 2;
-                break;
-            case  Subpiece subpiece:
-                currentItem = subpiece.gameObject;
-                subpiece.GetComponent<Collider>().enabled = false;
-                networkMonoBehaviourID = subpiece.GetComponent<NetworkedMonobehaviour>().ID;
-                position = transform.position + transform.forward * 2;
-                break;
-            case Workbench _:
-                networkMonoBehaviourID = -1;
-                position = default;
-                break;
-            default:
-                networkMonoBehaviourID = -1;
-                position = Vector3.zero;
-                break;
-        }
-        interactable?.Interact(this);
-    }
-
-    public T RefDetector<T>()
-    {
-        if (Physics.SphereCast(transform.position, 1f, transform.forward, out RaycastHit hitInfo, 2f, 1 << LayerMask.NameToLayer("Interactable")))
-        {
-            return hitInfo.transform.GetComponent<T>();
-        }
-        
-        return default;
-    }
-
     [PunRPC]
-    public void FindRefs(int id, Vector3 position)
+    void InteractRPC(int interactionManagerID, int networkedInteractableID)
     {
-        if (id == -1) return;
-        
-        var networkMonoBehaviour = FindObjectsOfType<NetworkedMonobehaviour>().First(n => n.ID == id);
-        networkMonoBehaviour.transform.position = position;
-        networkMonoBehaviour.transform.parent = transform;
-        
-        switch (networkMonoBehaviour)
+        var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
+        var interactable = PhotonView.Find(networkedInteractableID).GetComponent<Interactable>();
+        interactable.Interact(interactionManager);
+    }
+
+    private void TryInteraction()
+    {
+        if (Physics.SphereCast(transform.position, 1f, transform.forward, out var hit, 2f, interactionLayer))
         {
-            case Interactable _:
-                currentItem = networkMonoBehaviour.gameObject;
-                break;
-            case Interactor _:
-                currentTool = networkMonoBehaviour.gameObject;
-                break;
+            var interactable = hit.transform.GetComponent<Interactable>();
+            var interactableID = (interactable as NetworkedInteractable).GetComponent<PhotonView>().ViewID;
+            photonView.RPC(nameof(InteractRPC), RpcTarget.All, photonView.ViewID, interactableID);
         }
     }
 
-    [PunRPC]
+
+    [PunRPC] // needs reimplementation
     public void InteractWithRefs()
     {
         var toolInteractor = currentTool.GetComponent<Interactor>();

@@ -1,4 +1,6 @@
-﻿public interface Interactable
+﻿using Photon.Pun;
+
+public interface Interactable
 {
     public void Interact(InteractionManager interactionManager); // E
 }

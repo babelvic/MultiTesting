@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Workbench : MonoBehaviour, Interactable
+public class Workbench : NetworkedInteractable, Interactable
 {
     public Vector3 itemPosition;
     public Subpiece currentSubpiece;
@@ -22,8 +22,8 @@ public class Workbench : MonoBehaviour, Interactable
         Gizmos.DrawWireCube(transform.position + itemPosition, Vector3.one);
     }
 
-    public void Interact(InteractionManager interactionManager)
+    public override void Interact(InteractionManager interactionManager)
     {
-        SetSubpiece(interactionManager.currentItem.GetComponent<Subpiece>());
+        SetSubpiece(interactionManager.currentItem.GetComponent<Subpiece>()); // add checks for current item not being a subpiece or being null
     }
 }

@@ -12,11 +12,11 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.AutomaticallySyncScene = true;
-        SceneManager.sceneLoaded += OnsceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
         DontDestroyOnLoad(gameObject);
     }
 
-    private void OnsceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (PhotonNetwork.InRoom)
         {
@@ -48,7 +48,9 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Join Room");
         if (PhotonNetwork.IsMasterClient)
+        {
             PhotonNetwork.LoadLevel(1);
+        }
     }
 
     private void OnDrawGizmos()

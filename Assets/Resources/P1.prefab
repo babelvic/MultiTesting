@@ -266,7 +266,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 793324941357621538}
-  sceneViewId: 0
+  sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &2064187828
@@ -283,3 +283,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentTool: {fileID: 0}
   currentItem: {fileID: 0}
+  interactionLayer:
+    serializedVersion: 2
+    m_Bits: 128

@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class Tool : NetworkedMonobehaviour, Interactor, Interactable
+public class Tool : NetworkedInteractable, Interactor
 {
     public ToolData toolData;
 
@@ -11,8 +11,11 @@ public class Tool : NetworkedMonobehaviour, Interactor, Interactable
         return ProcessManager.Instance.Process(toolData, (interactable as Subpiece)?.subPieceData);
     }
 
-    public void Interact(InteractionManager interactionManager)
+    public override void Interact(InteractionManager interactionManager)
     {
-        //
+        interactionManager.currentTool = gameObject;
+        GetComponent<Collider>().enabled = false;
+        transform.position = interactionManager.transform.position + Vector3.up * 2;
+        transform.parent = interactionManager.transform;
     }
 }
