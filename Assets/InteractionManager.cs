@@ -63,6 +63,7 @@ public class InteractionManager : NetworkedMonoBehaviour
 
     private void TryDrop()
     {
+        if (currentPieceOrSubpiece == null) return;
         int managerID = photonView.ViewID;
         int dropObjectID = -1;
         if (Physics.SphereCast(transform.position, 1f, transform.forward, out var hit, 2f, dropLayer))
@@ -71,7 +72,7 @@ public class InteractionManager : NetworkedMonoBehaviour
                 dropObjectID = (dropable as Component).GetComponent<PhotonView>().ViewID;
         }
         
-        photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID);
+        photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID, currentObjectID);
         
         // int id;
         // if (currentItem) id = currentItem.GetComponent<PhotonView>().ViewID;
@@ -116,11 +117,17 @@ public class InteractionManager : NetworkedMonoBehaviour
     }
 
     [PunRPC]
-    void DropRPC(int interactionManagerID, int dropObjectID)
+    void DropRPC(int interactionManagerID, int dropObjectID, int itemObjectID)
     {
         var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
-        var dropObject = PhotonView.Find(dropObjectID).GetComponent<IObjectDropable>();
         var itemObject = PhotonView.Find(currentObjectID).GetComponent<Item>();
+
+        IObjectDropable dropObject = null;
+
+        if (dropObjectID != -1)
+        {
+            dropObject = PhotonView.Find(dropObjectID).GetComponent<IObjectDropable>();
+        }
 
         switch (dropObject)
         {
@@ -130,8 +137,10 @@ public class InteractionManager : NetworkedMonoBehaviour
             case Surface surface:
                 //lo mismo con surface
                 break;
-            default:
+            case null:
                 itemObject.transform.SetParent(null);
+                itemObject.GetComponent<Rigidbody>().isKinematic = false;
+                itemObject.GetComponent<Collider>().enabled = true;
                 break;
         }
         interactionManager.currentPieceOrSubpiece = null;
