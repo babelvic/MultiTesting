@@ -13,7 +13,7 @@ public class InteractionManager : NetworkedMonoBehaviour
     public LayerMask dropLayer;
     private PhotonView photonView;
 
-    private int currentObjectID;
+    private int currentItemID;
 
     private void Start()
     {
@@ -50,8 +50,8 @@ public class InteractionManager : NetworkedMonoBehaviour
             int managerID = photonView.ViewID;
             if (hit.transform.TryGetComponent<Item>(out var item))
             {
-                currentObjectID = item.GetComponent<PhotonView>().ViewID;
-                photonView.RPC(nameof(PickupRPC), RpcTarget.All, managerID, currentObjectID);
+                currentItemID = item.GetComponent<PhotonView>().ViewID;
+                photonView.RPC(nameof(PickupRPC), RpcTarget.All, managerID, currentItemID);
             }
         }
         
@@ -72,7 +72,7 @@ public class InteractionManager : NetworkedMonoBehaviour
                 dropObjectID = (dropable as Component).GetComponent<PhotonView>().ViewID;
         }
         
-        photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID, currentObjectID);
+        photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID);
         
         // int id;
         // if (currentItem) id = currentItem.GetComponent<PhotonView>().ViewID;
@@ -83,10 +83,10 @@ public class InteractionManager : NetworkedMonoBehaviour
     }
 
     [PunRPC]
-    void PickupRPC(int interactionManagerID, int currentObjectID)
+    void PickupRPC(int interactionManagerID, int itemID)
     {
         var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
-        var item = PhotonView.Find(currentObjectID).GetComponent<Item>();
+        var item = PhotonView.Find(itemID).GetComponent<Item>();
 
         switch (item.itemData)
         {
@@ -120,7 +120,7 @@ public class InteractionManager : NetworkedMonoBehaviour
     void DropRPC(int interactionManagerID, int dropObjectID)
     {
         var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
-        var itemObject = PhotonView.Find(interactionManager.currentObjectID).GetComponent<Item>();
+        var itemObject = PhotonView.Find(interactionManager.currentItemID).GetComponent<Item>();
 
         IObjectDropable dropObject = null;
 
