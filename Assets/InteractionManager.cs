@@ -72,7 +72,7 @@ public class InteractionManager : NetworkedMonoBehaviour
                 dropObjectID = (dropable as Component).GetComponent<PhotonView>().ViewID;
         }
         
-        photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID);
+        photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID, currentItemID);
         
         // int id;
         // if (currentItem) id = currentItem.GetComponent<PhotonView>().ViewID;
