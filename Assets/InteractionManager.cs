@@ -117,10 +117,10 @@ public class InteractionManager : NetworkedMonoBehaviour
     }
 
     [PunRPC]
-    void DropRPC(int interactionManagerID, int dropObjectID, int itemObjectID)
+    void DropRPC(int interactionManagerID, int dropObjectID)
     {
         var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
-        var itemObject = PhotonView.Find(currentObjectID).GetComponent<Item>();
+        var itemObject = PhotonView.Find(interactionManager.currentObjectID).GetComponent<Item>();
 
         IObjectDropable dropObject = null;
 
