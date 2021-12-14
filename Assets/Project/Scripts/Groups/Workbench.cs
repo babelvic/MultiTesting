@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class Workbench : NetworkedMonoBehaviour, IObjectDropable
 {
-    // public Vector3 itemPosition;
-    // public Subpiece currentSubpiece;
-    // public ToolData acceptedToolData;
-    //
-    // public void SetSubpiece(Subpiece subpiece)
-    // {
-    //     currentSubpiece = subpiece;
-    //     subpiece.transform.position = itemPosition + transform.position;
-    //     subpiece.transform.parent = transform;
-    // }
+    public Vector3 itemPosition;
+    public SubpieceData currentSubpiece;
+    public ToolData acceptedToolData;
+    
+    public void SetSubpiece(Item subpiece)
+    {
+        currentSubpiece = subpiece.itemData as SubpieceData;
+        subpiece.transform.position = itemPosition + transform.position;
+        subpiece.transform.parent = transform;
+    }
     //
     // private void OnDrawGizmosSelected()
     // {

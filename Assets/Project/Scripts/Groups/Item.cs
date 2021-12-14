@@ -5,4 +5,5 @@ using UnityEngine;
 public class Item : NetworkedMonoBehaviour
 {
     public ObjectData itemData;
+    
 }

@@ -10,7 +10,10 @@ public class InteractionManager : NetworkedMonoBehaviour
 {
     public ObjectData currentTool, currentPieceOrSubpiece;
     public LayerMask interactionLayer;
+    public LayerMask dropLayer;
     private PhotonView photonView;
+
+    private int currentObjectID;
 
     private void Start()
     {
@@ -47,20 +50,28 @@ public class InteractionManager : NetworkedMonoBehaviour
             int managerID = photonView.ViewID;
             if (hit.transform.TryGetComponent<Item>(out var item))
             {
-                int objectID = item.GetComponent<PhotonView>().ViewID;
-                photonView.RPC(nameof(PickupRPC), RpcTarget.All, managerID, objectID);
+                currentObjectID = item.GetComponent<PhotonView>().ViewID;
+                photonView.RPC(nameof(PickupRPC), RpcTarget.All, managerID);
             }
-
-
-            // itemSet.Add(hit.transform.GetComponent<>());
-
-            // var pickupable = hit.transform.GetComponent<NetworkedPickupable>();
-            // var pickupableID = pickupable.GetComponent<PhotonView>().ViewID;
         }
+        
+        // itemSet.Add(hit.transform.GetComponent<>());
+
+        // var pickupable = hit.transform.GetComponent<NetworkedPickupable>();
+        // var pickupableID = pickupable.GetComponent<PhotonView>().ViewID;
     }
 
     private void TryDrop()
     {
+        if (Physics.SphereCast(transform.position, 1f, transform.forward, out var hit, 2f, dropLayer))
+        {
+            int managerID = photonView.ViewID;
+            int dropObjectID = -1;
+            if(hit.transform.TryGetComponent<IObjectDropable>(out var dropable))
+                dropObjectID = (dropable as Component).GetComponent<PhotonView>().ViewID;
+            photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID);
+        }
+        
         // int id;
         // if (currentItem) id = currentItem.GetComponent<PhotonView>().ViewID;
         // else if (currentTool) id = currentTool.GetComponent<PhotonView>().ViewID;
@@ -70,10 +81,10 @@ public class InteractionManager : NetworkedMonoBehaviour
     }
 
     [PunRPC]
-    void PickupRPC(int interactionManagerID, int networkedInteractableID)
+    void PickupRPC(int interactionManagerID)
     {
         var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
-        var item = PhotonView.Find(networkedInteractableID).GetComponent<Item>();
+        var item = PhotonView.Find(currentObjectID).GetComponent<Item>();
 
         switch (item.itemData)
         {
@@ -104,8 +115,26 @@ public class InteractionManager : NetworkedMonoBehaviour
     }
 
     [PunRPC]
-    void DropRPC(int interactionManagerID, int networkedInteractableID)
+    void DropRPC(int interactionManagerID, int dropObjectID)
     {
+        var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
+        var dropObject = PhotonView.Find(dropObjectID).GetComponent<IObjectDropable>();
+        var itemObject = PhotonView.Find(currentObjectID).GetComponent<Item>();
+
+        switch (dropObject)
+        {
+            case Workbench workbench:
+                workbench.SetSubpiece(itemObject);
+                break;
+            case Surface surface:
+                //lo mismo con surface
+                break;
+            default:
+                itemObject.transform.SetParent(null);
+                break;
+        }
+        interactionManager.currentPieceOrSubpiece = null;
+        
         // var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
         // var pickupable = PhotonView.Find(networkedInteractableID).GetComponent<NetworkedPickupable>();
         // pickupable.OnDrop(interactionManager, null);
