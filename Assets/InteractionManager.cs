@@ -51,7 +51,7 @@ public class InteractionManager : NetworkedMonoBehaviour
             if (hit.transform.TryGetComponent<Item>(out var item))
             {
                 currentObjectID = item.GetComponent<PhotonView>().ViewID;
-                photonView.RPC(nameof(PickupRPC), RpcTarget.All, managerID);
+                photonView.RPC(nameof(PickupRPC), RpcTarget.All, managerID, currentObjectID);
             }
         }
         
@@ -83,7 +83,7 @@ public class InteractionManager : NetworkedMonoBehaviour
     }
 
     [PunRPC]
-    void PickupRPC(int interactionManagerID)
+    void PickupRPC(int interactionManagerID, int currentObjectID)
     {
         var interactionManager = PhotonView.Find(interactionManagerID).GetComponent<InteractionManager>();
         var item = PhotonView.Find(currentObjectID).GetComponent<Item>();
