@@ -13,7 +13,7 @@ public class InteractionManager : NetworkedMonoBehaviour
     public LayerMask dropLayer;
     private PhotonView photonView;
 
-    private int currentItemID;
+    public int currentItemID;
 
     private void Start()
     {
