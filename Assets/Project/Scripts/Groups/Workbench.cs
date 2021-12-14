@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Workbench : NetworkedMonoBehaviour
+public class Workbench : NetworkedMonoBehaviour, IObjectDropable
 {
     // public Vector3 itemPosition;
     // public Subpiece currentSubpiece;
