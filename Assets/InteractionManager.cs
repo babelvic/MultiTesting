@@ -63,14 +63,15 @@ public class InteractionManager : NetworkedMonoBehaviour
 
     private void TryDrop()
     {
+        int managerID = photonView.ViewID;
+        int dropObjectID = -1;
         if (Physics.SphereCast(transform.position, 1f, transform.forward, out var hit, 2f, dropLayer))
         {
-            int managerID = photonView.ViewID;
-            int dropObjectID = -1;
             if(hit.transform.TryGetComponent<IObjectDropable>(out var dropable))
                 dropObjectID = (dropable as Component).GetComponent<PhotonView>().ViewID;
-            photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID);
         }
+        
+        photonView.RPC(nameof(DropRPC), RpcTarget.All, managerID, dropObjectID);
         
         // int id;
         // if (currentItem) id = currentItem.GetComponent<PhotonView>().ViewID;
